@@ -1,5 +1,5 @@
 import express from 'express';
-import dbConnect from './config/dbConnection.js';
+import dbConnect from './src/config/dbConnection.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
