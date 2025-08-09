@@ -1,0 +1,80 @@
+# =========================================================================
+# ||       .gitignore for MERN Project with Client/Server folders        ||
+# ||                      Project: apna ticket                           ||
+# =========================================================================
+
+# ================= #
+# ||   SERVER    || (Node.js / Express Backend)
+# ================= #
+
+# Server dependencies
+Server/node_modules/
+
+# Environment variables for the server (contains secrets like DB connection strings, JWT secrets)
+Server/.env
+
+# Server log files
+Server/*.log
+Server/npm-debug.log*
+Server/yarn-debug.log*
+Server/yarn-error.log*
+
+# Server build output (if you use TypeScript or a bundler for the backend)
+Server/dist/
+Server/build/
+
+
+# ================= #
+# ||   CLIENT    || (React / Vite Frontend)
+# ================= #
+
+# Client dependencies
+Client/node_modules/
+
+# Environment variables for the client
+# CRA/Vite automatically ignore .env files, but this is a good safeguard.
+Client/.env
+Client/.env.local
+Client/.env.development.local
+Client/.env.test.local
+Client/.env.production.local
+
+# Client build output folder
+Client/build/
+Client/dist/
+
+# Client log files
+Client/*.log
+Client/npm-debug.log*
+Client/yarn-debug.log*
+Client/yarn-error.log*
+
+# Local build artifacts for client
+Client/.pnp
+Client/.pnp.js
+
+
+# =================================== #
+# || OPERATING SYSTEM & EDITOR FILES ||
+# =================================== #
+
+# OS-generated files (macOS, Windows)
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE / Text Editor configuration
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Miscellaneous
+.npm
