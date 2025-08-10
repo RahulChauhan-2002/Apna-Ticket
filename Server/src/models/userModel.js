@@ -21,19 +21,19 @@ const userSchema = new mongoose.Schema({
     },
 }, { timestamps: true });
 
-// Password hashing middleware: Save hone se pehle password ko hash karega
+// Password hashing middleware: Hashes the password before saving the document
 userSchema.pre('save', async function(next) {
-    // Agar password modify nahin hua hai to aage badhein
+    // Only run this function if the password was actually modified
     if (!this.isModified('password')) {
         return next();
     }
-    // Password ko hash karein
+    // Hash the password
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
     next();
 });
 
-// Password compare karne ke liye method
+// Method to compare entered password with the hashed password
 userSchema.methods.comparePassword = async function(enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
 };

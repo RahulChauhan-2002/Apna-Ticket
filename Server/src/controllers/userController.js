@@ -4,19 +4,19 @@ import jwt from 'jsonwebtoken';
 // Utility function to generate JWT and set it in a cookie
 const generateToken = (res, userId) => {
     const token = jwt.sign({ id: userId }, process.env.JWT_SECRET, {
-        expiresIn: '30d', // Token 30 din mein expire hoga
+        expiresIn: '30m', // Token will expire in 30 min
     });
 
     res.cookie('jwt', token, {
         httpOnly: true, // Prevents client-side JS from accessing the cookie
         secure: process.env.NODE_ENV !== 'development', // Use secure cookies in production
         sameSite: 'strict', // Mitigates CSRF attacks
-        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days in milliseconds
+        maxAge: 30 * 60 * 1000, // 30 min in milliseconds
     });
 };
 
-// @desc    Register a new user
-// @route   POST /api/v1/signup
+// @desc      Register a new user
+// @route     POST /api/v1/signup
 export const signupController = async (req, res) => {
     try {
         const { name, email, password } = req.body;
@@ -55,8 +55,8 @@ export const signupController = async (req, res) => {
     }
 };
 
-// @desc    Authenticate user & get token
-// @route   POST /api/v1/login
+// @desc      Authenticate user & get token
+// @route     POST /api/v1/login
 export const loginController = async (req, res) => {
     try {
         const { email, password } = req.body;

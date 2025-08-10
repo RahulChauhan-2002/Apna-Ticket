@@ -2,7 +2,7 @@ import express from 'express';
 import dbConnect from './src/config/dbConnection.js';
 import route from './src/routes/route.js';
 import dotenv from 'dotenv';
-import cookieParser from 'cookie-parser'; // cookie-parser import karein
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 
@@ -11,7 +11,7 @@ const app = express();
 
 // Middlewares
 app.use(express.json());
-app.use(cookieParser()); // cookie-parser middleware add karein
+app.use(cookieParser());
 
 // Routes
 app.use('/api/v1', route);
