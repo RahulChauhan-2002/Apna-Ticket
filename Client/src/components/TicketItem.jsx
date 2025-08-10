@@ -8,9 +8,9 @@ const TicketItem = ({ ticket }) => {
     // like `/tickets/${ticket._id}`
     const handleBookClick = () => {
         if (ticket.travelType === 'bus') {
-            navigate('/bus-tickets'); // Or a specific booking page
+            navigate('/book-ticket'); // Or a specific booking page
         } else if (ticket.travelType === 'train') {
-            navigate('/train-tickets');
+            navigate('/book-ticket');
         }
     };
     
