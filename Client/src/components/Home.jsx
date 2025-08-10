@@ -6,8 +6,7 @@ import axios from 'axios';
 import HomeLogo1 from "../assets/HomeLogo1.png";
 import TravelOptions from './TravelOptions';
 
-// --- TicketItem Component (from previous version) ---
-// Isko alag se rakha hai taaki code saaf rahe
+// --- TicketItem Component ---
 const TicketItem = ({ ticket }) => {
     const navigate = useNavigate();
 
@@ -57,7 +56,6 @@ const TicketItem = ({ ticket }) => {
 
 // --- Main Home Component ---
 const Home = () => {
-    // State aur data fetching logic yahan rakha hai
     const [tickets, setTickets] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -77,7 +75,6 @@ const Home = () => {
     }, []);
 
     return (
-        // Aapka purana main container
         <div className="flex flex-col gap-y-12"> 
             
             {/* --- Hero Banner --- */}
@@ -91,7 +88,7 @@ const Home = () => {
                 </div>
             </div>
 
-            {/* --- Ticket Offers Section (Ab Dynamic hai) --- */}
+            {/* --- Ticket Offers Section (Only Dynamic Data) --- */}
             <div className="space-y-6">
                 <h2 className="text-3xl font-bold text-center text-gray-800">Recently Posted Tickets</h2>
                 
