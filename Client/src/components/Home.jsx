@@ -12,9 +12,9 @@ const TicketItem = ({ ticket }) => {
 
     const handleBookClick = () => {
         if (ticket.travelType === 'bus') {
-            navigate('/bus-tickets');
+            navigate('/book-ticket');
         } else if (ticket.travelType === 'train') {
-            navigate('/train-tickets');
+            navigate('/book-ticket');
         }
     };
     
