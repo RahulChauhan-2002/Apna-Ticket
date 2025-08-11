@@ -40,7 +40,7 @@ const TicketItem = ({ ticket }) => {
                 <div className="w-full md:w-auto flex justify-center">
                     <button 
                         onClick={handleBookClick}
-                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-md transition-colors"
+                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-md transition-colors cursor-pointer"
                     >
                         BOOK
                     </button>

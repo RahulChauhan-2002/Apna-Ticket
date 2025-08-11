@@ -40,7 +40,7 @@ const BookTicket = () => {
 
     return (
         <div 
-            className="min-h-screen flex items-center justify-center p-4 bg-cover bg-center"
+            className="min-h-screen flex items-center justify-center p-4 bg-cover bg-center cursor-pointer"
             style={{ backgroundImage: `url(${backgroundImageUrl})` }}
         >
             {/* Overlay to make the form readable */}
@@ -90,7 +90,7 @@ const BookTicket = () => {
                     </div>
                     {/* Submit Button */}
                     <div>
-                        <button type="submit" className="w-full px-4 py-3.5 font-bold text-lg text-white bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300 transform hover:scale-105 disabled:opacity-70 disabled:scale-100" disabled={loading}>
+                        <button type="submit" className="w-full px-4 py-3.5 font-bold text-lg cursor-pointer text-white bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300 transform hover:scale-105 disabled:opacity-70 disabled:scale-100" disabled={loading}>
                             {loading ? 'Submitting...' : 'Confirm & Book Now'}
                         </button>
                     </div>
