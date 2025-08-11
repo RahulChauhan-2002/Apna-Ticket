@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Train, Bus, MapPin, Calendar, Clock, Ticket, Coins, ArrowRight } from 'lucide-react'; // Icons
+import { Train, Bus, MapPin, Calendar, Clock, Ticket, Coins, ArrowRight, Mail, Smartphone } from 'lucide-react'; // Icons
 
 const PostTicket = () => {
     const [formData, setFormData] = useState({
@@ -13,6 +13,8 @@ const PostTicket = () => {
         timing: "",
         seatType: "seater",
         price: "",
+        email: "", // Naya state
+        mobile: "", // Naya state
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -98,6 +100,18 @@ const PostTicket = () => {
                         <div className="relative">
                             <Clock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
                             <input type="time" name="timing" value={formData.timing} onChange={handleChange} required className="w-full pl-11 pr-4 py-3 bg-gray-100 rounded-lg border-gray-200 focus:ring-2 focus:ring-purple-500" disabled={loading} />
+                        </div>
+                    </div>
+
+                    {/* --- Contact Details --- */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div className="relative">
+                            <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                            <input type="email" name="email" value={formData.email} onChange={handleChange} required className="w-full pl-11 pr-4 py-3 bg-gray-100 rounded-lg" placeholder="Contact Email" disabled={loading} />
+                        </div>
+                        <div className="relative">
+                            <Smartphone className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                            <input type="tel" name="mobile" value={formData.mobile} onChange={handleChange} required maxLength="10" pattern="\d{10}" className="w-full pl-11 pr-4 py-3 bg-gray-100 rounded-lg" placeholder="Contact Mobile (10 digits)" disabled={loading} />
                         </div>
                     </div>
 
