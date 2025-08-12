@@ -1,78 +1,75 @@
 import mongoose from 'mongoose';
 
-// A schema that matches the data from your PostTicket form
 const postedTicketSchema = new mongoose.Schema({
-  // Corresponds to the 'travelType' radio buttons ('bus' or 'train')
-  travelType: {
-    type: String,
-    required: [true, 'Please specify the travel type (bus or train).'],
-    enum: ['bus', 'train'], // Ensures the value is one of these two options
-    default: 'bus'
-  },
-  // Corresponds to the 'from' input field
-  from: {
-    type: String,
-    required: [true, 'The "From" location is required.'],
-    trim: true // Removes any leading/trailing whitespace
-  },
-  // Corresponds to the 'to' input field
-  to: {
-    type: String,
-    required: [true, 'The "To" location is required.'],
-    trim: true
-  },
-  // Corresponds to the 'journeyDate' input field
-  journeyDate: {
-    type: Date,
-    required: [true, 'The date of journey is required.']
-  },
-  // Corresponds to the 'vehicleNumber' input field (for Bus or Train)
-  vehicleNumber: {
-    type: String,
-    required: [true, 'The vehicle (bus/train) number is required.'],
-    trim: true
-  },
-  // Corresponds to the 'timing' input field
-  timing: {
-    type: String, // Storing as a string like "22:30" is simple and effective
-    required: [true, 'The travel timing is required.']
-  },
-  // Corresponds to the 'seatType' dropdown
-  seatType: {
-    type: String,
-    required: [true, 'Please specify the seat type.'],
-    // Enum includes all possible options for both bus and train
-    enum: ['seater', 'sleeper', '3ac', '2ac', '1ac']
-  },
-  // Corresponds to the 'price' input field
-  price: {
-    type: Number,
-    required: [true, 'Please set a selling price.'],
-    min: [0, 'Price cannot be negative.'] // A price should not be less than 0
-  },
-
-  // --- Recommended Additional Fields ---
-
-  // To track who posted the ticket (you will need a User model for this)
-  postedBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User', // This assumes you have a User model
-    // required: true // You can make this required once user auth is in place
-  },
-
-  // To track if the ticket is still available or has been sold
-  status: {
-    type: String,
-    enum: ['available', 'sold', 'expired'],
-    default: 'available'
-  }
-
+    travelType: {
+        type: String,
+        required: [true, 'Please specify the travel type (bus or train).'],
+        enum: ['bus', 'train'],
+    },
+    from: {
+        type: String,
+        required: [true, 'The "From" location is required.'],
+        trim: true
+    },
+    to: {
+        type: String,
+        required: [true, 'The "To" location is required.'],
+        trim: true
+    },
+    journeyDate: {
+        type: Date,
+        required: [true, 'The date of journey is required.']
+    },
+    vehicleNumber: {
+        type: String,
+        required: [true, 'The vehicle (bus/train) number is required.'],
+        trim: true
+    },
+    timing: {
+        type: String,
+        required: [true, 'The travel timing is required.']
+    },
+    seatType: {
+        type: String,
+        required: [true, 'Please specify the seat type.'],
+    },
+    price: {
+        type: Number,
+        required: [true, 'Please set a selling price.'],
+        min: [0, 'Price cannot be negative.']
+    },
+    email: {
+        type: String,
+        required: [true, 'Email is required.'],
+        match: [/^\S+@\S+\.\S+$/, 'Please use a valid email address.'],
+    },
+    mobile: {
+        type: String,
+        required: [true, 'Mobile number is required.'],
+        match: [/^\d{10}$/, 'Please use a valid 10-digit mobile number.'],
+    },
+    postedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    status: {
+        type: String,
+        enum: ['available', 'sold', 'expired'],
+        default: 'available'
+    },
+    // Naya field jo auto-delete timer shuru karega
+    soldAt: {
+        type: Date,
+    }
 }, {
-  // This option automatically adds `createdAt` and `updatedAt` fields
-  timestamps: true
+    timestamps: true
 });
 
-// The model name 'PostedTicket' will result in a 'postedtickets' collection in MongoDB
+// TTL Index: Is line se MongoDB apne aap 'soldAt' field ke 3 ghante baad document delete kar dega
+// 10800 seconds = 3 hours
+postedTicketSchema.index({ "soldAt": 1 }, { expireAfterSeconds: 10800 });
+
 const PostedTicket = mongoose.model('PostedTicket', postedTicketSchema);
 
 export default PostedTicket;

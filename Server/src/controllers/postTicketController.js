@@ -11,7 +11,9 @@ export const postTicketController = async (req, res) => {
             vehicleNumber, 
             timing,
             seatType,
-            price
+            price,
+            email,
+            mobile
         } = req.body;
 
    
@@ -33,6 +35,8 @@ export const postTicketController = async (req, res) => {
             timing,
             seatType,
             price,
+             email,
+             mobile,
             postedBy
         };
 

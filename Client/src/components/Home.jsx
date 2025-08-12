@@ -1,35 +1,85 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+
+// --- Import your static assets and components ---
 import HomeLogo1 from "../assets/HomeLogo1.png";
 import TravelOptions from './TravelOptions';
-// Make sure you have created and are importing the reusable TicketItem component
-import TicketItem from './TicketItem'; 
 
+// --- TicketItem Component ---
+const TicketItem = ({ ticket }) => {
+    const navigate = useNavigate();
+
+    const handleDetailsClick = () => {
+        // Ticket type ke adhar par sahi page par navigate karein
+        // Saath mein ticket ki ID ko 'state' mein bhej rahe hain
+        if (ticket.travelType === 'bus') {
+            navigate('/bus-tickets', { state: { scrollToId: ticket._id } });
+        } else if (ticket.travelType === 'train') {
+            navigate('/train-tickets', { state: { scrollToId: ticket._id } });
+        }
+    };
+    
+    const formattedDate = new Date(ticket.journeyDate).toLocaleDateString('en-GB');
+
+    return (
+        <div className="bg-white rounded-lg shadow-lg p-6 mb-4">
+            <h3 className="text-xl font-semibold text-teal-600 mb-4 uppercase">
+                {ticket.travelType}
+            </h3>
+            <div className="flex items-center justify-center md:justify-between flex-wrap gap-4">
+                <div className="flex items-center gap-x-4">
+                    <span className="bg-lime-500 text-white font-bold text-lg py-2 px-4 rounded-md">
+                        {ticket.from}
+                    </span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-gray-500">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                    </svg>
+                    <span className="bg-lime-500 text-white font-bold text-lg py-2 px-4 rounded-md">
+                        {ticket.to}
+                    </span>
+                </div>
+                <span className="bg-cyan-200 text-cyan-800 font-semibold py-2 px-4 rounded-md">
+                    {formattedDate}
+                </span>
+                <div className="w-full md:w-auto flex justify-center">
+                    <button 
+                        onClick={handleDetailsClick}
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-md transition-colors"
+                    >
+                        TICKET DETAILS
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+
+// --- Main Home Component ---
 const Home = () => {
-    const [allTickets, setAllTickets] = useState([]);
+    const [tickets, setTickets] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchAllTickets = async () => {
+        const fetchTickets = async () => {
             try {
-                setLoading(true);
-                // This URL fetches ALL tickets, with no filters.
                 const { data } = await axios.get('/api/v1/tickets');
-                setAllTickets(data.data);
+                setTickets(data.data);
             } catch (error) {
-                console.error("Failed to fetch all tickets:", error);
+                console.error("Failed to fetch tickets:", error);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchAllTickets();
+        fetchTickets();
     }, []);
 
     return (
         <div className="flex flex-col gap-y-12"> 
             
-            {/* --- Hero Banner (No change) --- */}
+            {/* --- Hero Banner --- */}
             <div
                 className="relative w-full h-64 md:h-80 rounded-xl bg-cover bg-center"
                 style={{ backgroundImage: `url(${HomeLogo1})` }}
@@ -40,31 +90,30 @@ const Home = () => {
                 </div>
             </div>
 
-            {/* --- All Posted Tickets Section --- */}
+            {/* --- Ticket Offers Section --- */}
             <div className="space-y-6">
-                <h2 className="text-3xl font-bold text-center text-gray-800">All Available Tickets</h2>
+                <h2 className="text-3xl font-bold text-center text-gray-800">Recently Posted Tickets</h2>
                 
                 {loading ? (
-                    <p className="text-center text-gray-500">Loading tickets...</p>
+                    <p className="text-center">Loading tickets...</p>
                 ) : (
                     <div>
-                        {allTickets.length > 0 ? (
-                            allTickets.map(ticket => (
+                        {tickets.length > 0 ? (
+                            tickets.map(ticket => (
                                 <TicketItem key={ticket._id} ticket={ticket} />
                             ))
                         ) : (
-                            <p className="text-center text-gray-500">No tickets posted yet. Be the first!</p>
+                            <p className="text-center text-gray-500">No tickets posted yet.</p>
                         )}
                     </div>
                 )}
             </div>
             
-            {/* --- TravelOptions Section (No change) --- */}
+            {/* --- TravelOptions Section --- */}
             <TravelOptions /> 
 
         </div>
     );
 };
 
-// --- THIS LINE IS NOW CORRECTED ---
 export default Home;

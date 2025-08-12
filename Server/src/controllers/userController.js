@@ -81,3 +81,13 @@ export const loginController = async (req, res) => {
         res.status(500).json({ success: false, message: 'Server Error', error: error.message });
     }
 };
+
+// @desc    Logout user / clear cookie
+// @route   POST /api/v1/logout
+export const logoutController = (req, res) => {
+    res.cookie('jwt', '', {
+        httpOnly: true,
+        expires: new Date(0), // Set expiry date to the past
+    });
+    res.status(200).json({ success: true, message: 'Logged out successfully' });
+};
