@@ -4,19 +4,19 @@ import jwt from 'jsonwebtoken';
 // Utility function to generate JWT and set it in a cookie
 const generateToken = (res, userId) => {
     const token = jwt.sign({ id: userId }, process.env.JWT_SECRET, {
-        expiresIn: '30m', // Token will expire in 30 min
+        expiresIn: '30d', // Token will expire in 30 days
     });
 
     res.cookie('jwt', token, {
-        httpOnly: true, // Prevents client-side JS from accessing the cookie
-        secure: process.env.NODE_ENV !== 'development', // Use secure cookies in production
-        sameSite: 'strict', // Mitigates CSRF attacks
-        maxAge: 30 * 60 * 1000, // 30 min in milliseconds
+        httpOnly: true,
+        secure: process.env.NODE_ENV !== 'development',
+        sameSite: 'strict',
+        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days in milliseconds
     });
 };
 
-// @desc      Register a new user
-// @route     POST /api/v1/signup
+// @desc    Register a new user
+// @route   POST /api/v1/signup
 export const signupController = async (req, res) => {
     try {
         const { name, email, password } = req.body;
@@ -55,8 +55,8 @@ export const signupController = async (req, res) => {
     }
 };
 
-// @desc      Authenticate user & get token
-// @route     POST /api/v1/login
+// @desc    Authenticate user & get token
+// @route   POST /api/v1/login
 export const loginController = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -87,7 +87,23 @@ export const loginController = async (req, res) => {
 export const logoutController = (req, res) => {
     res.cookie('jwt', '', {
         httpOnly: true,
-        expires: new Date(0), // Set expiry date to the past
+        expires: new Date(0),
     });
     res.status(200).json({ success: true, message: 'Logged out successfully' });
+};
+
+// @desc    Google auth callback
+// @route   GET /api/v1/auth/google/callback
+export const googleCallbackController = (req, res) => {
+    generateToken(res, req.user._id);
+    // Frontend ke helper page par redirect karein
+    res.redirect('http://localhost:5173/login/success'); 
+};
+
+// @desc    Get user profile
+// @route   GET /api/v1/me
+export const getMeController = async (req, res) => {
+    // authMiddleware 'req.user' ko set kar dega
+    // req.user mein password pehle se hi hata hua hai
+    res.status(200).json({ success: true, data: req.user });
 };
