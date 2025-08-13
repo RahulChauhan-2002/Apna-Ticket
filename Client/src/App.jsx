@@ -11,6 +11,7 @@ import SignUp from './pages/navbarPages/SignUp';
 import PostTicket from './pages/navbarPages/PostTicket';
 import BusTicket from './pages/navbarPages/BusTicket';
 import TrainTicket from './pages/navbarPages/TrainTicket';
+import LoginSuccess from './pages/utilityPages/LoginSuccess';
 
 // --- Imports from ./pages/homePages/ ---
 import BookTicket from './pages/homePages/BookTicket';
@@ -30,6 +31,7 @@ const App = () => {
 
           {/* Routes for navbarPages */}
           <Route path="login" element={<Login />} />
+          <Route path="login/success" element={<LoginSuccess />} />
           <Route path="signup" element={<SignUp />} />
           <Route path="post-ticket" element={<PostTicket />} />
           <Route path="bus-tickets" element={<BusTicket />} />

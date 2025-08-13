@@ -1,26 +1,42 @@
 import express from 'express';
+import passport from 'passport';
 import { postTicketController } from '../controllers/postTicketController.js';
-import { signupController, loginController, logoutController } from '../controllers/userController.js';
+import { signupController, loginController, logoutController, googleCallbackController } from '../controllers/userController.js';
 import { 
     getAllTicketsController, 
     getTicketByIdController, 
-    updateTicketStatusController 
+    updateTicketStatusController,
+    deleteTicketController // Delete controller ko import karein
 } from '../controllers/ticketController.js';
 import { authMiddleware } from '../middlewares/authMiddleware.js';
 import { createBookingController } from '../controllers/bookingController.js';
+import { getMeController } from '../controllers/userController.js';
+import { createFeedbackController } from '../controllers/feedbackController.js';
 
 const router = express.Router();
+
+router.get("/me", authMiddleware, getMeController); // <-- Yah naya route add karein
 
 // --- User Authentication Routes ---
 router.post("/signup", signupController);
 router.post("/login", loginController);
 router.post("/logout", logoutController);
+router.post("/feedback", authMiddleware, createFeedbackController);
+router.get("/me", authMiddleware, getMeController); // <-- Yah naya route add karein
+
+// --- Google Auth Routes ---
+router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+router.get('/auth/google/callback', 
+    passport.authenticate('google', { failureRedirect: '/login', session: false }),
+    googleCallbackController
+);
 
 // --- Ticket Routes ---
 router.post("/postTicket", authMiddleware, postTicketController);
 router.get("/tickets", getAllTicketsController);
 router.get("/tickets/:id", getTicketByIdController);
 router.patch("/tickets/:id/status", authMiddleware, updateTicketStatusController);
+router.delete("/tickets/:id", authMiddleware, deleteTicketController); // <-- Naya DELETE route
 
 // --- Booking Route ---
 router.post("/book-ticket", createBookingController);

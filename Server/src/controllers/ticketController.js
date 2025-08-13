@@ -122,3 +122,30 @@ export const updateTicketStatusController = async (req, res) => {
         res.status(500).json({ success: false, message: 'Server Error' });
     }
 };
+
+//ticket delete
+export const deleteTicketController = async (req, res) => {
+    try {
+        const ticket = await Ticket.findById(req.params.id);
+
+        if (!ticket) {
+            return res.status(404).json({ success: false, message: 'Ticket not found' });
+        }
+
+        // Security Check: Sirf ticket post karne wala user hi use delete kar sakta hai
+        if (ticket.postedBy.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ success: false, message: 'User not authorized to delete this ticket' });
+        }
+
+        // Ticket ko database se remove karein
+        await ticket.deleteOne();
+
+        res.status(200).json({
+            success: true,
+            message: 'Ticket deleted successfully!',
+        });
+
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Server Error' });
+    }
+};

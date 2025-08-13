@@ -16,22 +16,18 @@ const TicketItem = React.forwardRef(({ ticket, onStatusChange, showOwnerControls
         if (!window.confirm(confirmText)) return;
 
         try {
-            // --- YAHAN BADLAV KIYA GAYA HAI ---
-            await axios.patch(
-                `/api/v1/tickets/${ticket._id}/status`, 
-                { status: newStatus },
-                { withCredentials: true } // Yah line zaroori hai
-            );
+            await axios.patch(`/api/v1/tickets/${ticket._id}/status`, { status: newStatus }, { withCredentials: true });
             if(onStatusChange) onStatusChange(ticket._id, newStatus);
         } catch (error) {
-            alert("An error occurred. You might need to log in again.");
-            console.error("Status update failed:", error);
+            alert("An error occurred.");
         }
     };
     
     const handleBookClick = () => {
         if (userInfo) {
-            navigate('/book-ticket');
+            // YAHAN BADLAV KIYA GAYA HAI
+            // ticketId ko state ke zariye booking page par bhejein
+            navigate('/book-ticket', { state: { ticketId: ticket._id } });
         } else {
             alert('Please log in to book a ticket.');
             navigate('/login');
@@ -57,7 +53,6 @@ const TicketItem = React.forwardRef(({ ticket, onStatusChange, showOwnerControls
                 </div>
             )}
             <div className="bg-white rounded-xl p-5">
-                {/* Card ka baaki ka design waisa hi rahega */}
                 <div className="flex justify-between items-start">
                     <div>
                         <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-semibold ${ticket.travelType === 'train' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}`}>
@@ -108,14 +103,12 @@ const TicketItem = React.forwardRef(({ ticket, onStatusChange, showOwnerControls
                     </div>
                      <div className="border-l h-8 border-gray-200"></div>
                     <div className="text-gray-700">
-                        <p className="font-bold text-lg capitalize">{ticket.seatType}</p>
+                        <p className="font-bold text-lg uppercase">{ticket.seatType}</p>
                         <p className="text-xs">Seat Type</p>
                     </div>
                 </div>
                 
-                {/* --- Conditional Buttons --- */}
                 {isOwner && showOwnerControls ? (
-                    // Agar user owner hai aur owner controls dikhane hain
                     ticket.status === 'available' ? (
                         <button onClick={() => handleStatusUpdate('sold')} className="mt-6 w-full bg-green-600 text-white font-bold py-3 rounded-lg hover:bg-green-700">Mark as Sold</button>
                     ) : (
@@ -124,7 +117,6 @@ const TicketItem = React.forwardRef(({ ticket, onStatusChange, showOwnerControls
                         </button>
                     )
                 ) : (
-                    // Doosre sabhi users ke liye
                     <button onClick={handleBookClick} disabled={ticket.status === 'sold'} className="mt-6 w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3 rounded-lg hover:from-purple-700 hover:to-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed">
                         {ticket.status === 'sold' ? 'Ticket Sold' : 'BOOK TICKET'}
                     </button>
