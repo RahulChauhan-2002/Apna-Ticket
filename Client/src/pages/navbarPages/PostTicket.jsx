@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Train, Bus, MapPin, Calendar, Clock, Ticket, Coins, ArrowRight, Mail, Smartphone } from 'lucide-react'; // Icons
+import { Train, Bus, MapPin, Calendar, Clock, Ticket, Coins, ArrowRight, Mail, Smartphone } from 'lucide-react';
+import { indianCities } from '../../data/indianCities';
+import { indianTrainStations } from '../../data/indianTrainStations';
+import AutocompleteInput from "../../components/AutocompleteInput";
 
 const PostTicket = () => {
     const [formData, setFormData] = useState({
@@ -13,8 +16,8 @@ const PostTicket = () => {
         timing: "",
         seatType: "seater",
         price: "",
-        email: "", // Naya state
-        mobile: "", // Naya state
+        email: "",
+        mobile: "",
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -36,9 +39,10 @@ const PostTicket = () => {
         setLoading(true);
         setError('');
         try {
-            await axios.post("/api/v1/postTicket", formData);
+            await axios.post("/api/v1/postTicket", formData, { withCredentials: true });
             setLoading(false);
-            alert("Your ticket has been posted successfully!");
+            // --- YAHAN BADLAV KIYA GAYA HAI ---
+            alert("Ticket posted successfully! \n\nIMPORTANT: When your ticket is sold, please go to the Bus/Train tickets page and mark it as 'Sold' to avoid further inquiries.");
             navigate("/");
         } catch (err) {
             setLoading(false);
@@ -51,11 +55,13 @@ const PostTicket = () => {
         }
     };
 
+    const today = new Date().toISOString().split('T')[0];
+    const formattedStations = indianTrainStations.map(s => `${s.name} (${s.code})`);
+
     return (
         <div className="min-h-screen flex items-center justify-center p-4 bg-slate-100">
             <div className="w-full max-w-4xl mx-auto p-8 bg-white rounded-2xl shadow-xl space-y-8">
                 
-                {/* --- Header --- */}
                 <div className="text-center">
                     <h1 className="text-4xl font-bold text-gray-900">Sell Your Unused Ticket</h1>
                     <p className="text-gray-600 mt-2">Help a fellow traveler and get some of your money back!</p>
@@ -81,13 +87,27 @@ const PostTicket = () => {
                     {/* --- From / To --- */}
                     <div className="flex items-center gap-4">
                         <div className="relative flex-1">
-                            <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
-                            <input type="text" name="from" value={formData.from} onChange={handleChange} required className="w-full pl-11 pr-4 py-3 bg-gray-100 rounded-lg border-gray-200 focus:ring-2 focus:ring-purple-500" placeholder="From" disabled={loading} />
+                            <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 z-10" size={20} />
+                            <AutocompleteInput
+                                name="from"
+                                value={formData.from}
+                                onChange={handleChange}
+                                placeholder="From"
+                                data={formData.travelType === 'bus' ? indianCities : formattedStations}
+                                disabled={loading}
+                            />
                         </div>
                         <ArrowRight className="text-purple-500" />
                         <div className="relative flex-1">
-                            <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
-                            <input type="text" name="to" value={formData.to} onChange={handleChange} required className="w-full pl-11 pr-4 py-3 bg-gray-100 rounded-lg border-gray-200 focus:ring-2 focus:ring-purple-500" placeholder="To" disabled={loading} />
+                            <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 z-10" size={20} />
+                            <AutocompleteInput
+                                name="to"
+                                value={formData.to}
+                                onChange={handleChange}
+                                placeholder="To"
+                                data={formData.travelType === 'bus' ? indianCities : formattedStations}
+                                disabled={loading}
+                            />
                         </div>
                     </div>
 
@@ -95,7 +115,16 @@ const PostTicket = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div className="relative">
                             <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
-                            <input type="date" name="journeyDate" value={formData.journeyDate} onChange={handleChange} required className="w-full pl-11 pr-4 py-3 bg-gray-100 rounded-lg border-gray-200 focus:ring-2 focus:ring-purple-500" disabled={loading} />
+                            <input 
+                                type="date" 
+                                name="journeyDate" 
+                                value={formData.journeyDate} 
+                                onChange={handleChange} 
+                                required 
+                                min={today}
+                                className="w-full pl-11 pr-4 py-3 bg-gray-100 rounded-lg border-gray-200 focus:ring-2 focus:ring-purple-500" 
+                                disabled={loading} 
+                            />
                         </div>
                         <div className="relative">
                             <Clock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
@@ -119,7 +148,18 @@ const PostTicket = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div className="relative">
                             <Ticket className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
-                            <input type="text" name="vehicleNumber" value={formData.vehicleNumber} onChange={handleChange} required className="w-full pl-11 pr-4 py-3 bg-gray-100 rounded-lg border-gray-200 focus:ring-2 focus:ring-purple-500" placeholder={formData.travelType === 'bus' ? 'Bus Number' : 'Train Number'} disabled={loading} />
+                            <input 
+                                type={formData.travelType === 'train' ? 'text' : 'text'}
+                                inputMode={formData.travelType === 'train' ? 'numeric' : 'text'}
+                                pattern={formData.travelType === 'train' ? '[0-9]*' : undefined}
+                                name="vehicleNumber" 
+                                value={formData.vehicleNumber} 
+                                onChange={handleChange} 
+                                required 
+                                className="w-full pl-11 pr-4 py-3 bg-gray-100 rounded-lg border-gray-200 focus:ring-2 focus:ring-purple-500" 
+                                placeholder={formData.travelType === 'bus' ? 'Bus Number' : 'Train Number'} 
+                                disabled={loading} 
+                            />
                         </div>
                         <div className="relative">
                             <select name="seatType" value={formData.seatType} onChange={handleChange} required className="w-full pl-4 pr-4 py-3 bg-gray-100 rounded-lg border-gray-200 focus:ring-2 focus:ring-purple-500" disabled={loading}>
