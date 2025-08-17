@@ -8,6 +8,13 @@ import { useAuth } from '../context/AuthContext';
 import HomeLogo1 from "../assets/HomeLogo1.png";
 import TravelOptions from './TravelOptions';
 
+// Helper function to extract station code from a string like "Gorakhpur (GKP)"
+const getStationCode = (stationString) => {
+    if (!stationString || !stationString.includes('(')) return stationString;
+    const match = stationString.match(/\(([^)]+)\)/);
+    return match ? match[1] : stationString;
+};
+
 // --- Simple Ticket Item Component ---
 const HomeTicketItem = ({ ticket, onDelete }) => {
     const navigate = useNavigate();
@@ -61,11 +68,17 @@ const HomeTicketItem = ({ ticket, onDelete }) => {
             </div>
             <div className="flex items-center justify-between pt-4 pr-8">
                 <div className="flex items-center gap-2">
-                    <span className="bg-lime-100 text-lime-800 font-semibold px-3 py-1 rounded-md">{ticket.from}</span>
+                    {/* YAHAN BADLAV KIYA GAYA HAI */}
+                    <span className="bg-lime-100 text-lime-800 font-semibold px-3 py-1 rounded-md">
+                        {ticket.travelType === 'train' ? getStationCode(ticket.from) : ticket.from}
+                    </span>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-gray-400">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                     </svg>
-                    <span className="bg-lime-100 text-lime-800 font-semibold px-3 py-1 rounded-md">{ticket.to}</span>
+                    {/* YAHAN BADLAV KIYA GAYA HAI */}
+                    <span className="bg-lime-100 text-lime-800 font-semibold px-3 py-1 rounded-md">
+                        {ticket.travelType === 'train' ? getStationCode(ticket.to) : ticket.to}
+                    </span>
                 </div>
                 <div className="flex items-center gap-4">
                     <span className="bg-cyan-100 text-cyan-800 font-semibold px-4 py-1 rounded-full text-sm">{formattedDate}</span>
@@ -168,21 +181,17 @@ const Home = () => {
             </style>
             <div className="flex flex-col gap-y-12"> 
                 
-                {/* --- HERO BANNER SECTION --- */}
                 <div
                     className="relative w-full h-64 md:h-80 rounded-xl bg-cover bg-center"
                     style={{ backgroundImage: `url(${HomeLogo1})` }}
                 >
                     <div className="absolute inset-0 bg-black/40 rounded-xl p-6 flex flex-col justify-between">
-                        {/* YAHAN BADLAV KIYA GAYA HAI (Top-Left Text) */}
                         <p 
-                            className="font-bold italic text-xl text-blue" 
+                            className="font-bold italic text-xl text-white" 
                             style={{ textShadow: '1px 1px 4px rgba(0,0,0,0.7)' }}
                         >
-                            Ticket Nahi Fikar Nahi
+                            Ticket nahi, fikar nahi
                         </p>
-
-                        {/* Center Text */}
                         <div className="text-center">
                             <h1 
                                 className="text-5xl md:text-7xl font-extrabold text-black-500"
@@ -197,13 +206,11 @@ const Home = () => {
                                 Your Ultimate Platform for Buying & Selling Tickets
                             </p>
                         </div>
-
-                        {/* YAHAN BADLAV KIYA GAYA HAI (Bottom-Right Text) */}
                         <p 
-                            className="font-bold italic text-xl self-end text-white-500" 
+                            className="font-bold italic text-xl self-end text-white" 
                             style={{ textShadow: '1px 1px 4px rgba(0,0,0,0.7)' }}
                         >
-                            Apna Ticket Rahe Befikar
+                            Apna ticket, rahe befikar
                         </p>
                     </div>
                 </div>

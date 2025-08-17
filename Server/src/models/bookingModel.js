@@ -27,11 +27,17 @@ const bookingSchema = new mongoose.Schema({
         required: [true, 'City is required.'],
         trim: true,
     },
-    // Aap yahan ticket ki ID bhi save kar sakte hain taaki pata chale kaun sa ticket book hua
+    // Ticket ki ID, jise book kiya jaa raha hai
     ticketId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'PostedTicket', // Aapke ticket model ka naam
-        // required: true,
+        required: true,
+    },
+    // Naya field: Ticket book karne waale user ki ID
+    bookedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User', // User model se reference
+        required: true,
     }
 }, { timestamps: true });
 

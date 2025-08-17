@@ -12,8 +12,14 @@ import { authMiddleware } from '../middlewares/authMiddleware.js';
 import { createBookingController } from '../controllers/bookingController.js';
 import { getMeController } from '../controllers/userController.js';
 import { createFeedbackController } from '../controllers/feedbackController.js';
+import { getMyPostedTickets, getMyBookedTickets, deleteMyBooking } from '../controllers/profileController.js';
 
 const router = express.Router();
+
+// --- Profile Routes ---
+router.get("/profile/my-posted-tickets", authMiddleware, getMyPostedTickets);
+router.get("/profile/my-booked-tickets", authMiddleware, getMyBookedTickets);
+router.delete("/profile/bookings/:id", authMiddleware, deleteMyBooking);
 
 router.get("/me", authMiddleware, getMeController); // <-- Yah naya route add karein
 

@@ -1,6 +1,8 @@
 import Booking from '../models/bookingModel.js';
-import Ticket from '../models/ticketPostModel.js'; // Ticket model import karein
+import Ticket from '../models/ticketPostModel.js';
 import nodemailer from 'nodemailer';
+import axios from 'axios';
+import { URLSearchParams } from 'url'; // Isko import karna zaroori hai
 
 // --- Nodemailer Setup ---
 const transporter = nodemailer.createTransport({
@@ -29,11 +31,14 @@ export const createBookingController = async (req, res) => {
         }
 
         // 3. Booking data save karein
-        await Booking.create({ name, email, mobile, state, city, ticketId });
+        await Booking.create({ name, email, mobile, state, city, ticketId,
+             bookedBy: req.user._id
+         });
 
-        // --- 4. Seller ko Email Notification Bhejein ---
+        // --- 4. Seller ko Notifications Bhejein ---
         const sellerEmail = ticketToBook.email;
-        const messageToSeller = `Hi! Someone is interested in your ticket from ${ticketToBook.from} to ${ticketToBook.to}. Contact them soon!\n\nBuyer Details:\nName: ${name}\nEmail: ${email}\nMobile: ${mobile}`;
+        const sellerMobile = ticketToBook.mobile;
+        const messageToSeller = `Hi! New booking request for your ticket from ${ticketToBook.from} to ${ticketToBook.to}. Buyer: ${name}, Mobile: ${mobile}. Contact them soon! - ApnaTicket`;
 
         // Email Bhejein
         try {
@@ -45,7 +50,19 @@ export const createBookingController = async (req, res) => {
             });
         } catch (emailError) {
             console.error("Failed to send email:", emailError);
-            // Email fail hone par process ko rokna nahin hai
+        }
+
+        // --- NAYA SMS LOGIC (Textlocal) ---
+        try {
+            const params = new URLSearchParams();
+            params.append('apikey', process.env.TEXTLOCAL_API_KEY);
+            params.append('numbers', `91${sellerMobile}`); // Country code ke saath number
+            params.append('message', messageToSeller);
+            params.append('sender', 'APNTKT'); // Sender ID (Textlocal par set karna padega)
+
+            await axios.post('https://api.textlocal.in/send/', params);
+        } catch (smsError) {
+            console.error("Failed to send SMS:", smsError.response ? smsError.response.data : smsError.message);
         }
 
         res.status(201).json({
@@ -57,3 +74,5 @@ export const createBookingController = async (req, res) => {
         res.status(500).json({ success: false, message: 'Server Error' });
     }
 };
+
+
