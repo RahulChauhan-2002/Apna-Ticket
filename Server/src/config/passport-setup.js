@@ -16,7 +16,7 @@ async (accessToken, refreshToken, profile, done) => {
             const newUser = await User.create({
                 name: profile.displayName,
                 email: profile.emails[0].value,
-                password: Math.random().toString(36).slice(-8) // Random password
+                password: Math.random().toString(36).slice(-8) 
             });
             return done(null, newUser);
         }

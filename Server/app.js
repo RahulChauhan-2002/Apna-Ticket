@@ -4,8 +4,8 @@ import route from './src/routes/route.js';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import passport from 'passport'; // Passport ko import karein
-import './src/config/passport-setup.js'; // Apni passport config file ko import karein
+import passport from 'passport'; 
+import './src/config/passport-setup.js'; 
 
 dotenv.config();
 
@@ -20,7 +20,6 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-// Passport Middleware ko initialize karein
 app.use(passport.initialize());
 
 // Routes

@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { HiMenu, HiX } from 'react-icons/hi';
 import { useAuth } from '../context/AuthContext';
 import { UserCircle } from 'lucide-react';
-import ProfileSidebar from './ProfileSidebar'; // Sidebar ko import karein
+import ProfileSidebar from './ProfileSidebar'; 
 
 // Asset Imports
 import BusLogo from '../assets/BusLogo.jpg';
@@ -11,7 +11,7 @@ import TrainLogo from '../assets/TrainLogo.jpg';
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [isProfileOpen, setIsProfileOpen] = useState(false); // Sidebar ke liye state
+    const [isProfileOpen, setIsProfileOpen] = useState(false); 
     const { userInfo, logout } = useAuth();
     const navigate = useNavigate();
 

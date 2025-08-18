@@ -6,7 +6,6 @@ const AutocompleteInput = ({ name, value, onChange, placeholder, data, disabled 
     const wrapperRef = useRef(null);
 
     useEffect(() => {
-        // Bahar click karne par suggestions band karne ke liye
         function handleClickOutside(event) {
             if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
                 setIsFocused(false);
@@ -18,7 +17,7 @@ const AutocompleteInput = ({ name, value, onChange, placeholder, data, disabled 
 
     const handleInputChange = (e) => {
         const inputValue = e.target.value;
-        onChange(e); // Parent component ka state update karein
+        onChange(e); 
 
         if (inputValue.length > 0) {
             const filteredSuggestions = data.filter(item =>
@@ -31,7 +30,6 @@ const AutocompleteInput = ({ name, value, onChange, placeholder, data, disabled 
     };
 
     const handleSuggestionClick = (suggestion) => {
-        // Synthetic event banayein taaki parent ka handleChange function kaam kare
         const event = { target: { name, value: suggestion } };
         onChange(event);
         setSuggestions([]);

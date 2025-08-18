@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext'; 
-import { FcGoogle } from 'react-icons/fc'; // Google Icon
+import { FcGoogle } from 'react-icons/fc'; 
 
 const Login = () => {
     const [email, setEmail] = useState('');

@@ -2,7 +2,7 @@ import Booking from '../models/bookingModel.js';
 import Ticket from '../models/ticketPostModel.js';
 import nodemailer from 'nodemailer';
 import axios from 'axios';
-import { URLSearchParams } from 'url'; // Isko import karna zaroori hai
+import { URLSearchParams } from 'url'; 
 
 // --- Nodemailer Setup ---
 const transporter = nodemailer.createTransport({
@@ -56,9 +56,9 @@ export const createBookingController = async (req, res) => {
         try {
             const params = new URLSearchParams();
             params.append('apikey', process.env.TEXTLOCAL_API_KEY);
-            params.append('numbers', `91${sellerMobile}`); // Country code ke saath number
+            params.append('numbers', `91${sellerMobile}`); 
             params.append('message', messageToSeller);
-            params.append('sender', 'APNTKT'); // Sender ID (Textlocal par set karna padega)
+            params.append('sender', 'APNTKT'); 
 
             await axios.post('https://api.textlocal.in/send/', params);
         } catch (smsError) {
