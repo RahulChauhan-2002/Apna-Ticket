@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { useAuth } from '../../context/AuthContext'; 
 import { FcGoogle } from 'react-icons/fc'; 
+import { axiosInstance } from '../../routes/axiosInstance';
+import { BACKEND_URL } from '../../routes/axiosInstance';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -18,7 +19,7 @@ const Login = () => {
         setLoading(true);
         setError('');
         try {
-            const { data } = await axios.post('/api/v1/login', { email, password });
+            const { data } = await axiosInstance.post('/api/v1/login', { email, password });
             setLoading(false);
             login(data.data); 
             alert('Login successful!');
@@ -32,7 +33,7 @@ const Login = () => {
     // Google Login ke liye function
     const handleGoogleLogin = () => {
         // Backend ke Google auth route par redirect karein
-        window.location.href = "http://localhost:3000/api/v1/auth/google";
+        window.location.href = `${BACKEND_URL}/api/v1/auth/google`;
     };
 
     return (

@@ -25,7 +25,7 @@ const Footer = () => {
         setLoading(true);
         try {
             // Backend API ko call karein
-            const { data } = await axios.post(
+            const { data } = await axiosInstance.post(
                 '/api/v1/feedback', 
                 { formType, message },
                 { withCredentials: true } // Taaki login user ki info bhi jaaye
